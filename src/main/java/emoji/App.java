@@ -1,7 +1,9 @@
 package emoji;
 
 import java.sql.*;
+import java.util.Scanner;
 
+import emoji.Model.Emoji;
 import emoji.Util.DatabaseHandler;
 
 /**
@@ -16,11 +18,10 @@ public final class App {
      * @param args The arguments of the program.
      */
     public static void main(String[] args) throws Exception {
-        Statement statement = DatabaseHandler.createStatement();
-        ResultSet set = statement.executeQuery("SELECT * FROM `emoji`");
-        while (set.next()) {
-            System.out.println(set.getString("characters") + "  " + set.getString("code"));
-        }
+        Scanner scanner = new Scanner(System.in);
+        String userInput = scanner.nextLine().trim().toLowerCase();
+        Emoji userEmoji = Emoji.findByCode(userInput);
 
+        System.out.println(userEmoji);
     }
 }

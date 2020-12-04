@@ -38,4 +38,9 @@ public final class DatabaseHandler {
         return getConnection().createStatement();
     }
 
+    public static PreparedStatement prepareStatement(String sql) throws SQLException
+    {
+        return getConnection().prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+    }
+
 }
