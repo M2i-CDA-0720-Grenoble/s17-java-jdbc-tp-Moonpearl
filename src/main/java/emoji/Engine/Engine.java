@@ -1,8 +1,10 @@
 package emoji.Engine;
 
 import java.util.List;
+import java.util.Set;
 
 import emoji.Model.Emoji;
+import emoji.Model.Tag;
 import emoji.Util.Console;
 
 public final class Engine {
@@ -17,22 +19,34 @@ public final class Engine {
     public void update() {
         Console.lineBreak();
         String userInput = Console.input("Search for an emoji");
-        List<Emoji> userEmoji = Emoji.findByCodeLike(userInput);
 
         if ("".equals(userInput)) {
             terminate();
             return;
         }
 
-        if (userEmoji.isEmpty()) {
+        Set<Emoji> emojis = Emoji.findByCodeLike(userInput);
+        Tag tag = Tag.findByName(userInput);
+        if (tag != null) {
+            Set<Emoji> emojisByTag = tag.getEmojis();
+
+            for (Emoji emoji: emojisByTag) {
+                if (!emojis.contains(emoji)) {
+                    emojis.add(emoji);
+                }
+            }
+        }
+
+        if (emojis.isEmpty()) {
             Console.warn("No result found. 😢 ");
         } else {
             
-            for (Emoji emoji: userEmoji) {
+            for (Emoji emoji: emojis) {
                 System.out.println(emoji);
             }
 
         }
+        return;
     }
 
     private void terminate()

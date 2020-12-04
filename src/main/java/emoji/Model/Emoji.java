@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import emoji.Util.Console;
 import emoji.Util.DatabaseHandler;
@@ -52,10 +54,10 @@ public final class Emoji {
         }
     }
 
-    public static List<Emoji> findByCodeLike(String search)
+    public static Set<Emoji> findByCodeLike(String search)
     {
         try {
-            List<Emoji> result = new ArrayList<>();
+            Set<Emoji> result = new HashSet<>();
             PreparedStatement statement = DatabaseHandler.prepareStatement(
                 "SELECT * FROM `emoji` WHERE `code` LIKE ?"
             );
@@ -78,10 +80,46 @@ public final class Emoji {
         }
     }
 
+    public static Set<Emoji> findByTag(Tag tag)
+    {
+        try {
+            Set<Emoji> result = new HashSet<>();
+            PreparedStatement statement = DatabaseHandler.prepareStatement(
+                "SELECT `emoji`.* FROM `emoji` INNER JOIN `emoji_tags` ON `emoji_tags`.`emoji_id` = `emoji`.`id` WHERE `emoji_tags`.`tag_id` = ?"
+            );
+            statement.setInt(1, tag.getId());
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                result.add(
+                    new Emoji(
+                        set.getInt("id"),
+                        set.getString("code"),
+                        set.getString("characters")
+                    )
+                );
+            }
+            return result;
+        }
+        catch (SQLException exception) {
+            Console.error("Error while fetching emoji related to tag '" + tag.getName() + "'.");
+            return null;
+        }
+    }
+
     @Override
     public String toString()
     {
         return characters;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj != null && obj.getClass() == this.getClass()) {
+            Emoji otherEmoji = (Emoji)obj;
+            return this.getId() == otherEmoji.getId();
+        }
+        return false;
     }
 
     public int getId() {
