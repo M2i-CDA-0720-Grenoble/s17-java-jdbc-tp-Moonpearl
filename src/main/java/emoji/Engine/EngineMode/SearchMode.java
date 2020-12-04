@@ -19,6 +19,11 @@ public final class SearchMode extends EngineMode {
 
     public void interpret(String userInput)
     {
+        if ("+".equals(userInput)) {
+            engine.setMode( new SetCodeMode(engine, new Emoji()) );
+            return;
+        }
+
         // Récupère tous les emojis dont le nom contient la saisie de l'utilisateur
         Set<Emoji> emojis = Emoji.findByCodeLike(userInput);
         // Si la saisie de l'utilisateur correspondant à un nom de catégorie

@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.crypto.Data;
+
 import emoji.Util.Console;
 import emoji.Util.DatabaseHandler;
 
@@ -102,6 +104,25 @@ public final class Emoji {
             Console.error("Error while fetching emoji related to tag '" + tag.getName() + "'.");
             return null;
         }
+    }
+
+    public void save() throws SQLException
+    {
+        if (id == 0) {
+            insert();
+        } else {
+            // update()
+        }
+    }
+
+    protected void insert() throws SQLException
+    {
+        PreparedStatement statement = DatabaseHandler.prepareStatement(
+            "INSERT INTO `emoji` (`code`, `characters`) VALUES (?, ?)"
+        );
+        statement.setString(1, code);
+        statement.setString(2, characters);
+        statement.executeUpdate();
     }
 
     @Override

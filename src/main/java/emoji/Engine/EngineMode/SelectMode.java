@@ -38,7 +38,10 @@ public final class SelectMode extends EngineMode {
 
     public void interpret(String userInput)
     {
-        // Gère la sélection de l'utilisateur
+        if ("+".equals(userInput)) {
+            engine.setMode( new SetCodeMode(engine, new Emoji()) );
+            return;
+        }
 
         int choice = 0;
         try {
