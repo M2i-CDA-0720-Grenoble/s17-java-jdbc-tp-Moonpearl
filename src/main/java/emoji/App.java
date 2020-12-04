@@ -1,9 +1,6 @@
 package emoji;
 
-import java.sql.*;
-import java.util.Scanner;
-
-import emoji.Model.Emoji;
+import emoji.Engine.Engine;
 import emoji.Util.DatabaseHandler;
 
 /**
@@ -18,10 +15,14 @@ public final class App {
      * @param args The arguments of the program.
      */
     public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(System.in);
-        String userInput = scanner.nextLine().trim().toLowerCase();
-        Emoji userEmoji = Emoji.findByCode(userInput);
+        
+        DatabaseHandler.getInstance();
 
-        System.out.println(userEmoji);
+        Engine engine = new Engine();
+
+        while (engine.isRunning()) {
+            engine.update();
+        }
+
     }
 }

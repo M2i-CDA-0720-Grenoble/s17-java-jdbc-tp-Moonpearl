@@ -14,7 +14,7 @@ public final class DatabaseHandler {
             connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/java_emoji?user=root&password=root");
         }
         catch (SQLException exception) {
-            exception.printStackTrace();
+            Console.error("Error while establishing connection to database.");
             System.exit(1);
         }
     }

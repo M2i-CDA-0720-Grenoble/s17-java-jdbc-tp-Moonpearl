@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import emoji.Util.Console;
 import emoji.Util.DatabaseHandler;
 
 public final class Emoji {
@@ -44,7 +45,7 @@ public final class Emoji {
             return null;
         }
         catch (SQLException exception) {
-            System.out.println("Error while fetching emoji '" + code + "'.");
+            Console.error("Error while fetching emoji '" + code + "'.");
             return null;
         }
     }
