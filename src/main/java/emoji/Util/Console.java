@@ -21,6 +21,10 @@ public final class Console {
 
         return instance;
     }
+
+    public static void printInColor(String message, ConsoleColor color) {
+        System.out.print(color + message + ConsoleColor.RESET);
+    }
     
     public static void warn(String message)
     {

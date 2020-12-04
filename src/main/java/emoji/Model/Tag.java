@@ -1,7 +1,6 @@
 package emoji.Model;
 
 import java.sql.*;
-import java.util.List;
 import java.util.Set;
 
 import emoji.Util.Console;

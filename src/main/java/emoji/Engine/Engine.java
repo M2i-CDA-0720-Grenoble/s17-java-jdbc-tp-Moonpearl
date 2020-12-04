@@ -1,55 +1,40 @@
 package emoji.Engine;
 
-import java.util.List;
-import java.util.Set;
-
-import emoji.Model.Emoji;
-import emoji.Model.Tag;
+import emoji.Engine.EngineMode.EngineMode;
+import emoji.Engine.EngineMode.SearchMode;
 import emoji.Util.Console;
 
 public final class Engine {
 
     private boolean isRunning;
+    private EngineMode mode;
 
     public Engine()
     {
         isRunning = true;
+        mode = new SearchMode(this);
     }
     
     public void update() {
         Console.lineBreak();
-        String userInput = Console.input("Search for an emoji");
+        String userInput = Console.input( mode.getPrompt() );
 
         if ("".equals(userInput)) {
-            terminate();
+            mode.onEmptyInput();
             return;
         }
 
-        Set<Emoji> emojis = Emoji.findByCodeLike(userInput);
-        Tag tag = Tag.findByName(userInput);
-        if (tag != null) {
-            Set<Emoji> emojisByTag = tag.getEmojis();
-
-            for (Emoji emoji: emojisByTag) {
-                if (!emojis.contains(emoji)) {
-                    emojis.add(emoji);
-                }
-            }
-        }
-
-        if (emojis.isEmpty()) {
-            Console.warn("No result found. 😢 ");
-        } else {
-            
-            for (Emoji emoji: emojis) {
-                System.out.println(emoji);
-            }
-
-        }
-        return;
+        mode.interpret(userInput);
     }
 
-    private void terminate()
+    public void setMode(EngineMode mode)
+    {
+        this.mode = mode;
+
+        mode.display();
+    }
+
+    public void terminate()
     {
         isRunning = false;
     }
