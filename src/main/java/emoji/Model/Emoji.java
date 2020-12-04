@@ -3,6 +3,8 @@ package emoji.Model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import emoji.Util.Console;
 import emoji.Util.DatabaseHandler;
@@ -46,6 +48,32 @@ public final class Emoji {
         }
         catch (SQLException exception) {
             Console.error("Error while fetching emoji '" + code + "'.");
+            return null;
+        }
+    }
+
+    public static List<Emoji> findByCodeLike(String search)
+    {
+        try {
+            List<Emoji> result = new ArrayList<>();
+            PreparedStatement statement = DatabaseHandler.prepareStatement(
+                "SELECT * FROM `emoji` WHERE `code` LIKE ?"
+            );
+            statement.setString(1, "%" + search + "%");
+            ResultSet set = statement.executeQuery();
+            while (set.next()) {
+                result.add(
+                    new Emoji(
+                        set.getInt("id"),
+                        set.getString("code"),
+                        set.getString("characters")
+                    )
+                );
+            }
+            return result;
+        }
+        catch (SQLException exception) {
+            Console.error("Error while fetching emoji containing '" + search + "'.");
             return null;
         }
     }

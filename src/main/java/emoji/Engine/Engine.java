@@ -1,6 +1,6 @@
 package emoji.Engine;
 
-import java.util.Scanner;
+import java.util.List;
 
 import emoji.Model.Emoji;
 import emoji.Util.Console;
@@ -17,17 +17,21 @@ public final class Engine {
     public void update() {
         Console.lineBreak();
         String userInput = Console.input("Search for an emoji");
-        Emoji userEmoji = Emoji.findByCode(userInput);
+        List<Emoji> userEmoji = Emoji.findByCodeLike(userInput);
 
         if ("".equals(userInput)) {
             terminate();
             return;
         }
 
-        if (userEmoji == null) {
+        if (userEmoji.isEmpty()) {
             Console.warn("No result found. 😢 ");
         } else {
-            System.out.println(userEmoji);
+            
+            for (Emoji emoji: userEmoji) {
+                System.out.println(emoji);
+            }
+
         }
     }
 
